@@ -1,0 +1,4 @@
+country,bank,legal_entity,account_type,provider,connection_method,commercial_api_eligibility,available_fields,historical_range,refresh_method,expected_delay,onboarding,renewal,evidence_source,verification_date,status
+Synthetic,Demo Bank,Acme Design Co.,Corporate current,Mock,Explicit demo authorization,Synthetic only,"ID; amount; currency; direction; narration; booking status",September 2026,Manual or worker,Synthetic batch,Demo onboarding,Demo renewal,montra/providers.ts,2026-09-29,connected
+Unverified,First real bank,To be supplied,To be verified,Not selected,Unverified,Unverified,Unverified,Unverified,Unverified,Unverified,Unverified,Unverified,,,unverified
+

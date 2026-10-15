@@ -1,0 +1,87 @@
+[
+  {
+    "providerId": "demo-001",
+    "amount": "12450.00",
+    "currency": "USD",
+    "direction": "credit",
+    "status": "booked",
+    "narration": "NORTHSTAR STUDIO / INV NS-0926 / CLIENT SETTLEMENT",
+    "counterparty": "Northstar Studio",
+    "bookedAt": "2026-09-25",
+    "sourceAt": "2026-09-25T12:00:00Z"
+  },
+  {
+    "providerId": "demo-002",
+    "amount": "2801.00",
+    "currency": "USD",
+    "direction": "debit",
+    "status": "booked",
+    "narration": "ATLAS WORKSPACE / OFFICE LEASE SEPTEMBER",
+    "counterparty": "Atlas Workspace",
+    "bookedAt": "2026-09-24",
+    "sourceAt": "2026-09-24T10:00:00Z"
+  },
+  {
+    "providerId": "demo-004",
+    "amount": "6200.00",
+    "currency": "USD",
+    "direction": "credit",
+    "status": "booked",
+    "narration": "MERIDIAN PARTNERS / MP-1042",
+    "counterparty": "Meridian Partners",
+    "bookedAt": "2026-09-22",
+    "sourceAt": "2026-09-22T10:00:00Z"
+  },
+  {
+    "providerId": "demo-006",
+    "amount": "86.40",
+    "currency": "USD",
+    "direction": "debit",
+    "status": "booked",
+    "narration": "BANK SERVICE CHARGE",
+    "bookedAt": "2026-09-20",
+    "sourceAt": "2026-09-20T10:00:00Z"
+  },
+  {
+    "providerId": "demo-007",
+    "amount": "1200.00",
+    "currency": "USD",
+    "direction": "debit",
+    "status": "booked",
+    "narration": "STUDIO EQUIPMENT / PART PAYMENT",
+    "counterparty": "Forma Supply",
+    "bookedAt": "2026-09-19",
+    "sourceAt": "2026-09-19T10:00:00Z"
+  },
+  {
+    "providerId": "demo-008",
+    "amount": "940.00",
+    "currency": "USD",
+    "direction": "credit",
+    "status": "booked",
+    "narration": "DESIGN RETAINER / SEPTEMBER",
+    "counterparty": "Olive Collective",
+    "bookedAt": "2026-09-18",
+    "sourceAt": "2026-09-18T10:00:00Z"
+  },
+  {
+    "providerId": "demo-001",
+    "amount": "12450.00",
+    "currency": "USD",
+    "direction": "credit",
+    "status": "booked",
+    "narration": "NORTHSTAR STUDIO / INV NS-0926 / CLIENT SETTLEMENT",
+    "counterparty": "Northstar Studio",
+    "bookedAt": "2026-09-25",
+    "sourceAt": "2026-09-25T12:00:00Z"
+  },
+  {
+    "providerId": "demo-999",
+    "amount": "10.00",
+    "currency": "USD",
+    "direction": "debit",
+    "status": "booked",
+    "narration": "UNIMPORTED SYNTHETIC CHARGE",
+    "bookedAt": "2026-09-21"
+  }
+]
