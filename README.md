@@ -23,7 +23,7 @@ Requirements: Node.js 22.13 or later. Install dependencies with `npm ci`.
 npm run dev
 ```
 
-Open `http://localhost:5173/`, choose **Sign in to Montra** (local development identity only), and create the demo workspace. Start in **Transactions** to review the generated activity, then use **Accounts & connections** to exercise synthetic failure scenarios. Use **Evidence** for synthetic invoice fixtures and **Reconciliation** for a synthetic comparison fixture.
+Open `http://localhost:5173/`, choose **Sign in to Montra** (local development identity only), and create the demo workspace. Start in **Transactions** to review the generated activity, then use **Connected accounts** to exercise synthetic failure scenarios. Use **Supporting documents** for synthetic invoice fixtures and **Check against statement** for a synthetic comparison fixture.
 
 Do not enter real bank or card credentials or upload real statements or invoices. The product is configured for synthetic testing only.
 
@@ -53,3 +53,5 @@ The ingestion pipeline handles: receive paginated source records, validate and n
 See [the product roadmap](docs/product-roadmap.md) for use cases, priorities, acceptance criteria, dependencies, and the full delivery plan. See [testing/pilot-company-and-provider-brief.md](testing/pilot-company-and-provider-brief.md) for account/provider screening questions and draft messages that have not been sent.
 
 Development reviews can use the [local graph workflow](docs/code-review-workflow.md).
+
+See the [SBI Card connection investigation](docs/sbi-card-connection-route.md) for verified findings, unresolved coverage and eligibility questions, pricing, the proposed API flow, and the live-pilot prerequisites.
