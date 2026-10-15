@@ -11,3 +11,11 @@
 7. Revisit document review and statement comparison. Confirm synthetic-only restrictions and the saved reports still work. Document settings must describe deletion timing without claiming immediate removal of every backup or historical record.
 
 These checks are not marked passed by source inspection or a successful build.
+
+## Financial workspace redesign — 16 October 2026
+
+- Added clickable account cards that select the existing account filter, and a Clear filters action that resets account, description, dates, status and direction.
+- Applied the warm canvas / forest theme to transaction summaries, connections, member controls and transaction details. Summary values still use the existing currency and filtered-history rules; no invented chart data was added.
+- Regression suite: 27 passed. TypeScript `tsc --noEmit`: passed. Whitespace check: passed.
+- Production build could not complete: the native compiler reported memory allocation failures, including after reducing parallelism. This is an unresolved environment validation blocker; do not treat the new production build as verified.
+- Browser visual acceptance remains pending under the previously reported local browser policy restriction. Verify account-card selection, Clear filters, readable long names and amounts, mobile layout, keyboard focus and reduced motion before release.
