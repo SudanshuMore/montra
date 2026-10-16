@@ -6,6 +6,7 @@ import { enqueue, disconnect, processJobs } from './sync.ts';
 import { upload, propose, review, detail, downloadGrant, download, type ObjectStore } from './evidence.ts';
 import { reconcile } from './reconciliation.ts';
 import { provider } from './providers.ts';
+import { integrationReadiness } from './integration-readiness.ts';
 export type Runtime={db:Database;bucket:ObjectStore;defer?:(f:()=>Promise<void>)=>void};
 const json=(data:unknown,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'}});
 async function readBody(req:Request){
@@ -39,6 +40,11 @@ export async function handle(req:Request,user:Identity|null,runtime:Runtime):Pro
   }
   const org=url.searchParams.get('org');if(!org)fail(400,'Organization required');
   const c=await context(db,user,org);
+  if(path[0]==='integration-readiness'){
+   role(c,'administrator');
+   if(method!=='GET'||path.length!==1)fail(405,'Read-only readiness report');
+   return json(integrationReadiness());
+  }
   if(path[0]==='state'&&method==='GET'){
    const list=await accounts(c),ids=list.map(a=>a.id),mark=ids.map(()=>'?').join(',')||'NULL';
    const tx=await many(db,`SELECT t.*,a.name account_name,a.mask,a.bank,(SELECT COALESCE(SUM(al.units),0) FROM allocations al WHERE al.org_id=t.org_id AND al.transaction_id=t.id AND al.status='confirmed') confirmed_units FROM transactions t JOIN accounts a ON a.org_id=t.org_id AND a.id=t.account_id WHERE t.org_id=? AND t.account_id IN (${mark}) ORDER BY COALESCE(t.booked_at,t.source_at) DESC,t.id LIMIT 1000`,org,...ids);

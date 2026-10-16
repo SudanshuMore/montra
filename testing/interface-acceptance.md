@@ -12,6 +12,10 @@
 
 These checks are not marked passed by source inspection or a successful build.
 
+Developer readiness: as an administrator, open Settings → Developer readiness. Verify that live access is blocked, provider and SDK are unselected, and all six prerequisite cards are readable. No credential fields or live-enable controls should exist. Restricted members must not see this settings entry and must receive a server denial if they request its endpoint. Browser acceptance remains pending.
+
+Latest readiness increment verification: 28 regression tests passed; TypeScript passed; all five production build stages passed on 16 October 2026. This successful build supersedes the earlier compiler memory-allocation blocker for the current source. Visual acceptance remains pending.
+
 ## Financial workspace redesign — 16 October 2026
 
 - Added clickable account cards that select the existing account filter, and a Clear filters action that resets account, description, dates, status and direction.

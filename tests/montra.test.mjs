@@ -7,6 +7,19 @@ async function request(s,path,body,user=owner,org=s.org){return handle(new Reque
 async function good(r,status=200){assert.equal(r.status,status,await r.clone().text());return r.json()}
 async function doc(s,total='2800.00'){return good(await request(s,'documents',{accountId:s.account.id,name:'invoice.txt',text:'MONTRA SYNTHETIC INVOICE\nDemo lease invoice',amount:total,currency:'USD'}),201)}
 async function allocation(s,d,total='2800.00'){return good(await request(s,'allocations',{transactionId:s.tx.id,documentId:d.id,amount:total}),201)}
+
+test('integration readiness is administrator-only, read-only and cannot enable live access',async()=>{
+ const s=await setup();
+ const report=await good(await request(s,'integration-readiness'));
+ assert.equal(report.liveEnabled,false);assert.equal(report.sandboxConnected,false);assert.equal(report.sdk,null);
+ assert.ok(report.items.some(x=>x.id==='eligibility'&&x.status==='blocked'));
+ assert.equal((await request(s,'integration-readiness',{liveEnabled:true})).status,405);
+ assert.equal((await request(s,'integration-readiness',undefined,outsider)).status,404);
+ await good(await request(s,'members',{userId:outsider.id,role:'finance_viewer',accountIds:[s.account.id]}));
+ assert.equal((await request(s,'integration-readiness',undefined,outsider)).status,403);
+ assert.equal((await handle(new Request('https://montra.test/api/integration-readiness?org='+s.org),null,s.runtime)).status,401);
+ assert.equal((await good(await request(s,'integration-readiness'))).liveEnabled,false);
+});
 test('decimal precision and currencies',()=>{assert.equal(decimal(BigInt(money('0.10','USD').units)+BigInt(money('0.20','USD').units),'USD'),'0.30');assert.equal(money('1.001','KWD').units,1001);assert.equal(money('12','JPY').amount,'12');for(const [v,c] of [['1.001','USD'],['1.0','JPY'],['-1','USD'],['1e4','USD'],['1','ZZZ'],['Infinity','USD'],['9000000000001','JPY']])assert.throws(()=>money(v,c));});
 test('paginated ingestion and exact totals',async()=>{const s=await setup();assert.ok(s.tx,'booked transaction imported');const state=await good(await request(s,'state'));assert.equal(state.transactions.length,8);assert.equal(state.runs[0].pages,3);assert.equal(state.runs[0].state,'succeeded');assert.deepEqual(state.totals,[{currency:'USD',in:'19590.00',out:'4335.40'}]);assert.equal(state.balances.length,1);});
 test('duplicate ingestion is idempotent',async()=>{const s=await setup();s.db.sqlite.prepare("UPDATE connections SET scenario='duplicate' WHERE id=?").run(s.connection.id);await enqueue(s.ctx,s.connection.id);await processJobs(s.db,s.org);assert.equal(s.db.sqlite.prepare('SELECT count(*) n FROM transactions WHERE org_id=?').get(s.org).n,8);assert.equal(s.db.sqlite.prepare('SELECT count(*) n FROM source_revisions WHERE org_id=?').get(s.org).n,8);});
