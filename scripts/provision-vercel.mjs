@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import postgres from 'postgres';
 import {createClient} from '@supabase/supabase-js';
 import {postgresSchema} from './postgres-schema.mjs';
+import {databaseTls} from '../montra/database-tls.mjs';
 
 // Runs explicitly during the first production build, using Vercel-injected
 // credentials. Creates a new application schema; never imports the local DB.
@@ -10,7 +11,7 @@ const project=process.env.SUPABASE_URL??process.env.NEXT_PUBLIC_SUPABASE_URL;
 const secret=process.env.SUPABASE_SECRET_KEY??process.env.SUPABASE_SERVICE_ROLE_KEY;
 if(!url||!project||!secret)throw new Error('Provisioning requires the connected Supabase environment');
 const plan=postgresSchema(['drizzle/0000_faulty_ikaris.sql','drizzle/0001_email_sessions.sql'].map(f=>fs.readFileSync(f,'utf8')));
-const sql=postgres(url,{ssl:{rejectUnauthorized:true},prepare:false,max:1,connect_timeout:10,onnotice:()=>{}});
+const sql=postgres(url,{ssl:databaseTls,prepare:false,max:1,connect_timeout:10,onnotice:()=>{}});
 let stage='database-connect';
 try{
  await sql.begin(async tx=>{

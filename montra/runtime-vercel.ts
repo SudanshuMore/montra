@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { postgresDatabase, type PgExecutor } from './postgres-db.ts';
 import type { Runtime } from './service.ts';
 import { privateStore } from './supabase-storage.ts';
+import { databaseTls } from './database-tls.mjs';
 
 let current:Runtime|undefined;
 export function runtimeValues():Record<string,unknown>{return {
@@ -17,7 +18,7 @@ export function runtime():Runtime {
  if(!url||!projectUrl||!secret)throw new Error('Application storage unavailable');
  const host=new URL(projectUrl);if(host.protocol!=='https:'||!host.hostname.endsWith('.supabase.co'))throw new Error('Invalid storage origin');
  // Transaction pooler: no prepared statements, a small per-instance pool and TLS.
- const client=postgres(url,{prepare:false,max:2,idle_timeout:20,connect_timeout:10,ssl:{rejectUnauthorized:true},connection:{search_path:'montra,pg_catalog'},onnotice:()=>{},types:{safeInt:{to:20,from:[20],serialize:String,parse:(value:string)=>{const n=Number(value);if(!Number.isSafeInteger(n))throw new Error('Integer exceeds supported precision');return n}}}});
+ const client=postgres(url,{prepare:false,max:2,idle_timeout:20,connect_timeout:10,ssl:databaseTls,connection:{search_path:'montra,pg_catalog'},onnotice:()=>{},types:{safeInt:{to:20,from:[20],serialize:String,parse:(value:string)=>{const n=Number(value);if(!Number.isSafeInteger(n))throw new Error('Integer exceeds supported precision');return n}}}});
  function executor(sql:typeof client|postgres.TransactionSql):PgExecutor{return {
   async query(query,values){return {rows:Array.from(await sql.unsafe(query,values as postgres.ParameterOrJSON<never>[]))}},
   async transaction(work){return client.begin(async tx=>work(executor(tx))) as Promise<any>}

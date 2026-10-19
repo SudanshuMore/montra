@@ -16,6 +16,8 @@ The PostgreSQL adapter binds values separately from SQL, preserves atomic batche
 
 ## Verification and current limits
 
+Both provisioning and production use the public Supabase Root 2021 CA downloaded from Database Settings, with certificate verification enabled. The certificate is bundled in `montra/database-tls.mjs` so serverless tracing cannot omit an external certificate file. Its SHA-256 fingerprint and expiry are checked by `tests/database-tls.test.mjs`; renew the CA before 26 April 2031, or when Supabase announces a replacement. Never resolve certificate failures by disabling TLS verification. Provisioning logs only its stage and a bounded machine error code, without connection strings, SQL, credentials or provider messages.
+
 `tests/postgres.test.mjs` runs the real PostgreSQL engine through PGlite: schema dependencies, onboarding, customer isolation, repeat ingestion, rollback, email confirmation and revoked sessions. `tests/private-storage.test.mjs` checks private object operations and invalid path rejection. Existing SQLite/auth tests remain applicable to local development. Tests use synthetic data and do not establish live email delivery or a security certification.
 
 On memory-constrained Windows hosts, run the suite sequentially with:
