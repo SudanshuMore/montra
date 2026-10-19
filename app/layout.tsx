@@ -5,9 +5,6 @@ import "./montra.css";
 export const metadata: Metadata = {
   title: "Montra · Banking & evidence",
   description: "Private banking and transaction evidence pilot. Synthetic data only.",
-  other: {
-    "codex-preview": "development",
-  },
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

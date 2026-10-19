@@ -1,12 +1,16 @@
-import { env } from 'cloudflare:workers';
+import { runtime, runtimeValues } from '@montra/runtime';
 import { after } from 'next/server';
 import { getChatGPTUser } from '../../chatgpt-auth';
 import { handle } from '../../../montra/service';
+import { readAuthConfig, resolveIdentity } from '../../../montra/auth';
 export const dynamic='force-dynamic';
 async function dispatch(request:Request){
- const u=await getChatGPTUser();
- if(!env.DB||!env.BUCKET)return Response.json({error:'Database or private storage is unavailable.'},{status:503,headers:{'Cache-Control':'no-store'}});
- return handle(request,u?{id:u.userId,email:u.email}:null,{db:env.DB,bucket:env.BUCKET,defer:fn=>after(async()=>{try{await fn()}catch{/* Do not log credentials or provider payloads. Durable jobs remain retryable. */}})});
+ try{
+ const backend=runtime();
+ const config=readAuthConfig(runtimeValues(),process.env.NODE_ENV==='development');
+ const identity=await resolveIdentity(request,backend.db,config,async()=>{const u=await getChatGPTUser();return u?{id:u.userId,email:u.email}:null;});
+ return handle(request,identity,{...backend,defer:fn=>after(async()=>{try{await fn()}catch{/* Do not log credentials or provider payloads. Durable jobs remain retryable. */}})});
+ }catch{return Response.json({error:'Sign-in is temporarily unavailable'},{status:503,headers:{'Cache-Control':'no-store'}});}
 }
 export const GET=dispatch;
 export const POST=dispatch;

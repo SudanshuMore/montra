@@ -4,7 +4,7 @@ import { now, uid, fail } from './money.ts';
 export async function onboard(db:Database,user:Identity,name:string){
  if(typeof name!=='string'||name.trim().length<2||name.length>80)fail(400,'Organization name must have 2–80 characters');
  const existing=await many(db,'SELECT * FROM memberships WHERE user_id=?',user.id);if(existing.length)fail(409,'Your demo organizations already exist');
- const t=now(),q=[stmt(db,'INSERT INTO users(id,email) VALUES(?,?)',user.id,user.email)];
+ const t=now(),q=[stmt(db,'INSERT INTO users(id,email) VALUES(?,?) ON CONFLICT(id) DO UPDATE SET email=excluded.email',user.id,user.email),stmt(db,'INSERT INTO workspace_onboarding(user_id,created_at) VALUES(?,?)',user.id,t)];
  for(const label of [name.trim(),'Cedar Works']){
   const org=uid(),entity=uid(),conn=uid(),acc=uid();
   q.push(stmt(db,'INSERT INTO organizations(id,name,created_at) VALUES(?,?,?)',org,label,t),

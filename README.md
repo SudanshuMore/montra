@@ -14,6 +14,9 @@ Montra is a financial operations product under development, bringing read-only b
 - Synthetic statement comparison and test scenarios for duplicates, retries, updates, and reversals.
 - Full-ledger totals independent of the display cap, with explicit filtered display scope.
 - Clear provider boundary: the unverified provider adapter fails closed.
+- Email-link sign-in code using the official Supabase SDK, short-lived browser-bound confirmation, hashed revocable sessions and two-user isolation tests. Real email delivery awaits owner configuration.
+
+For P1 progress and remaining setup, see [the delivery checklist](docs/p1-delivery-checklist.md) and [email-login setup](docs/email-login-and-workspace-onboarding.md). An existing local sample database needs `npm run db:migrate:auth:local` before the new onboarding/session code is used. Production authentication defaults to disabled; configure email mode or explicitly trusted platform mode as documented.
 
 ## Run locally
 

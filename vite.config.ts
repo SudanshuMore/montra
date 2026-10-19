@@ -51,6 +51,7 @@ export default defineConfig(async () => {
   const { cloudflare } = await import("@cloudflare/vite-plugin");
 
   return {
+    resolve: { alias: { '@montra/runtime': new URL('./montra/runtime-cloudflare.ts', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1') } },
     server: {
       ...(managedLinux ? { host: "0.0.0.0", allowedHosts: ["terminal.local"] } : {}),
       ...(isCodexSeatbeltSandbox ? { watch: { useFsEvents: false, usePolling: true } } : {}),
