@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Sign in to Montra</title></head>
+<body style="margin:0;background:#f5f6ef;font-family:Arial,sans-serif;color:#18352e;">
+  <table role="presentation" style="width:100%;border-collapse:collapse;"><tr><td style="padding:32px 16px;">
+    <table role="presentation" style="width:100%;max-width:520px;margin:auto;border-collapse:collapse;background:#ffffff;border:1px solid #e0e6dc;border-radius:16px;"><tr><td style="padding:36px;">
+      <p style="margin:0 0 32px;font-size:26px;font-weight:bold;">montra</p>
+      <h1 style="margin:0 0 16px;font-size:26px;line-height:1.3;">Your workspace is one step away.</h1>
+      <p style="font-size:16px;line-height:1.6;">Use the button below to finish signing in. Open it in the same browser where you requested this email, then confirm your sign-in.</p>
+      <p style="margin:28px 0;"><a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}" style="display:inline-block;padding:15px 24px;background:#183f32;border-radius:8px;color:#ffffff;font-weight:bold;text-decoration:none;">Sign in to Montra</a></p>
+      <p style="font-size:14px;line-height:1.6;color:#53665c;">This link expires in 10 minutes and can be used once. If you did not request it, you can ignore this email.</p>
+      <p style="margin-top:28px;padding-top:20px;border-top:1px solid #e0e6dc;font-size:12px;line-height:1.6;color:#53665c;">Montra sample-data pilot. Signing in does not connect a bank or authorize a payment. Never share this sign-in link.</p>
+    </td></tr></table>
+  </td></tr></table>
+</body>
+</html>

@@ -16,9 +16,9 @@ Cookies use Path=/, HttpOnly and SameSite=Lax. HTTPS uses Secure and __Host- nam
 
 ## Configuration required before actual email testing
 
-A free Supabase project has been provisioned in Mumbai and connected to the Vercel project. Its production origin and exact callback have been saved. Actual email delivery and the custom template are still pending; automated tests do not send real mail. Do not send service-role keys, SMTP passwords or database passwords through chat. See `vercel-supabase-deployment.md` for the production adapter and database provisioning path.
+A free Supabase project has been provisioned in Mumbai and connected to the Vercel project. Its production origin and exact callback have been saved. The Resend domain is verified and custom SMTP is configured. Use `emails/sign-in.html` for both the magic-link and first-time confirmation templates, with a ten-minute email OTP expiry. Actual delivered-email and two-user hosted acceptance must be recorded separately; automated tests do not send real mail. Do not send service-role keys, SMTP passwords or database passwords through chat. See `vercel-supabase-deployment.md` for the production adapter and database provisioning path.
 
-For local Cloudflare development put these values in ignored .dev.vars (production uses equivalent protected Worker bindings):
+For local Cloudflare development put these values in ignored .dev.vars (Vercel production uses protected project environment settings):
 
 ```dotenv
 MONTRA_AUTH_MODE=email
@@ -33,7 +33,7 @@ In Supabase:
 
 - Enable email authentication and keep email verification enabled.
 - Set the Site URL to the exact Montra origin. Allow the exact /auth/confirm redirect for that origin; do not use production wildcard redirects.
-- Configure the magic-link template to point at the server confirmation route using the provider token hash, as described in the official server-side email-template guide. For a single local project this can use:
+- Configure both the magic-link and confirm-sign-up templates to point at the server confirmation route using the provider token hash. `emails/sign-in.html` is the version-controlled branded template. For a single local project the link can use:
 
 ```html
 <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}">Sign in to Montra</a>
