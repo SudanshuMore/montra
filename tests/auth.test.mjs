@@ -36,6 +36,18 @@ test('expired provider links, expired browser challenges, missing challenge and 
  s.db.sqlite.prepare("UPDATE auth_attempts SET expires_at='2000-01-01'").run();assert.equal((await handleAuth(req('/auth/confirm',{token_hash:'first_token_012345678901234567890'},c),s.db,config,s.provider)).status,400);
  assert.equal(s.db.sqlite.prepare('SELECT COUNT(*) n FROM auth_sessions').get().n,0);
 });
+test('HTML confirmation supports native form posts without accepting null or foreign origins',async()=>{
+ const s=setup(),c=await start(s),token='first_native_form_012345678901234567890';
+ const page=await handleAuth(req('/auth/confirm?token_hash='+token,undefined,c),s.db,config,s.provider);
+ assert.equal(page.headers.get('referrer-policy'),'strict-origin');
+ assert.match(await page.text(),/<form method="post" action="\/auth\/confirm">/);
+ function form(origin){return new Request(config.origin+'/auth/confirm',{method:'POST',headers:{Origin:origin,Cookie:c,'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({token_hash:token})})}
+ assert.equal((await handleAuth(form('null'),s.db,config,s.provider)).status,403);
+ assert.equal((await handleAuth(form('https://other.test'),s.db,config,s.provider)).status,403);
+ const accepted=await handleAuth(form(config.origin),s.db,config,s.provider);
+ assert.equal(accepted.status,303,await accepted.clone().text());
+ assert.equal(s.db.sqlite.prepare('SELECT COUNT(*) n FROM auth_sessions').get().n,1);
+});
 test('signout revokes copied cookies; expiry, tampering and duplicate cookies do not authenticate',async()=>{
  const s=setup(),cookie=await login(s);assert.ok(await sessionIdentity(req('/api/session',undefined,cookie),s.db,config));
  assert.equal(await sessionIdentity(req('/api/session',undefined,cookie),s.db,{...config,supabaseUrl:'https://different-project.supabase.co'}),null);

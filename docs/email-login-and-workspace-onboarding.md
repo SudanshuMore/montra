@@ -12,7 +12,7 @@ Montra uses the official @supabase/supabase-js SDK, pinned at 2.118.0, for email
 6. New users create their own two explicitly synthetic workspaces using the existing sample onboarding. The flow works when a verified identity already exists in users. A database onboarding claim prevents concurrent duplicate provisioning. It is not a live-bank onboarding flow.
 7. Sign out revokes the current Montra session and expires its cookie. A new sign-in rotates the browser's prior session. Other devices retain their own sessions until expiry or database revocation. Global sign-out and an administrator session-management UI are not implemented.
 
-Cookies use Path=/, HttpOnly and SameSite=Lax. HTTPS uses Secure and __Host- names. Insecure cookies are permitted only for localhost/127.0.0.1 development. Repeated or malformed cookies fail closed. Authentication responses have no-store and no-referrer headers. The confirmation page has a restrictive CSP and does not load third-party resources.
+Cookies use Path=/, HttpOnly and SameSite=Lax. HTTPS uses Secure and __Host- names. Insecure cookies are permitted only for localhost/127.0.0.1 development. Repeated or malformed cookies fail closed. Authentication responses have no-store headers. The confirmation page uses strict-origin referrer policy so native form posts retain a verifiable Origin without exposing the callback path or token in Referer; other auth responses use no-referrer. Null and foreign origins remain rejected. The confirmation page has a restrictive CSP and does not load third-party resources.
 
 ## Configuration required before actual email testing
 

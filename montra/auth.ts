@@ -78,7 +78,9 @@ export async function handleAuth(req:Request,db:Database,c:AuthConfig,provider:E
    const token=new URL(req.url).searchParams.get('token_hash')??'';
    if(!/^[a-zA-Z0-9_-]{20,512}$/.test(token))fail(400,'Invalid sign-in link. Request a new one.');
    const challenge=readCookie(req,c,'challenge');if(!validToken(challenge))fail(400,'Open this link in the browser where you requested it, or request a new link.');
-   const h=headers();h.set('Content-Type','text/html; charset=utf-8');h.set('Content-Security-Policy',"default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'");
+   // no-referrer makes a native form POST send Origin: null. Keep origin
+   // checks strict while withholding the callback path and token from Referer.
+   const h=headers();h.set('Referrer-Policy','strict-origin');h.set('Content-Type','text/html; charset=utf-8');h.set('Content-Security-Policy',"default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'");
    return new Response(`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Confirm Montra sign-in</title><style>body{font:16px system-ui;background:#f5f5ef;color:#234b3d;max-width:440px;margin:12vh auto;padding:24px}button{background:#234b3d;color:white;padding:14px 24px;border:0;border-radius:12px;font:inherit;cursor:pointer}p{line-height:1.7}</style><main><p>MONTRA</p><h1>Continue to your workspace</h1><p>Confirm to finish signing in. This link can be used once and must be opened in the browser that requested it.</p><form method="post" action="/auth/confirm"><input type="hidden" name="token_hash" value="${token}"><button>Confirm sign-in</button></form><p><a href="/signin">Request another link</a></p></main></html>`,{headers:h});
   }
   if(path==='/auth/confirm'&&req.method==='POST'){
